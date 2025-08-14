@@ -1,5 +1,7 @@
 import { create } from 'zustand';
-import { AgentType } from '../scripts/api/types';
+
+import { classifyTopic } from '../scripts/api/commander';
+import type { AgentType } from '../scripts/api/types';
 
 export type ChatMessage = {
   role: 'user' | 'assistant';
@@ -7,53 +9,48 @@ export type ChatMessage = {
 };
 
 export interface ChatThread {
-  threadId: string;
+  id: string;
   agentType?: AgentType;
   messages: ChatMessage[];
 }
 
 interface ChatState {
   threads: Record<string, ChatThread>;
-  createThread: (threadId: string) => void;
-  addMessage: (threadId: string, message: ChatMessage) => void;
-  setAgentType: (threadId: string, agent: AgentType) => void;
-  getThread: (threadId: string) => ChatThread | undefined;
+  appendMessage: (id: string, message: ChatMessage) => Promise<void>;
+  getThreadById: (id: string) => ChatThread | undefined;
 }
 
 export const useChatStore = create<ChatState>((set, get) => ({
   threads: {},
-  createThread: (threadId) => {
-    const existing = get().threads[threadId];
-    if (existing) return;
+  appendMessage: async (id, message) => {
+    const existing = get().threads[id] ?? { id, messages: [] };
+    const isFirst = existing.messages.length === 0 && message.role === 'user';
+
+    // add the message immediately
     set((state) => ({
       threads: {
         ...state.threads,
-        [threadId]: { threadId, messages: [] },
-      },
-    }));
-  },
-  addMessage: (threadId, message) => {
-    const current = get().threads[threadId] ?? { threadId, messages: [] };
-    set((state) => ({
-      threads: {
-        ...state.threads,
-        [threadId]: {
-          ...current,
-          messages: [...current.messages, message],
+        [id]: {
+          ...existing,
+          id,
+          messages: [...existing.messages, message],
         },
       },
     }));
-  },
-  setAgentType: (threadId, agent) =>
-    set((state) => {
-      const thread = state.threads[threadId];
-      if (!thread) return state;
-      return {
+
+    if (isFirst) {
+      const agentType = await classifyTopic(message.content);
+      set((state) => ({
         threads: {
           ...state.threads,
-          [threadId]: { ...thread, agentType: agent },
+          [id]: {
+            ...state.threads[id],
+            agentType,
+          },
         },
-      };
-    }),
-  getThread: (threadId) => get().threads[threadId],
+      }));
+    }
+  },
+  getThreadById: (id) => get().threads[id],
 }));
+

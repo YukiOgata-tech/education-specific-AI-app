@@ -2,7 +2,6 @@ import React, { useRef, useState } from 'react';
 import { View, TextInput, Button, FlatList, Text } from 'react-native';
 import { nanoid } from 'nanoid';
 
-import { classifyTopic } from '../../../scripts/api/commander';
 import { tutor } from '../../../scripts/api/tutor';
 import { counselor } from '../../../scripts/api/counselor';
 import { planner } from '../../../scripts/api/planner';
@@ -19,33 +18,27 @@ export default function NewChatScreen() {
   const threadIdRef = useRef(nanoid());
   const threadId = threadIdRef.current;
   const [input, setInput] = useState('');
-  const { threads, addMessage, setAgentType, createThread } = useChatStore();
 
-  if (!threads[threadId]) {
-    createThread(threadId);
-  }
+  const appendMessage = useChatStore((state) => state.appendMessage);
+  const thread = useChatStore((state) => state.getThreadById(threadId));
 
   const handleSend = async () => {
     const text = input.trim();
     if (!text) return;
-    addMessage(threadId, { role: 'user', content: text });
+    await appendMessage(threadId, { role: 'user', content: text });
 
-    let agent = useChatStore.getState().threads[threadId].agentType;
-    if (!agent) {
-      agent = await classifyTopic(text);
-      setAgentType(threadId, agent);
-    }
-
-    const messages = useChatStore.getState().threads[threadId].messages;
-    const reply = await agentClients[agent](messages);
-    addMessage(threadId, { role: 'assistant', content: reply });
+    const current = useChatStore.getState().getThreadById(threadId);
+    const agent = current?.agentType;
+    if (!agent) return;
+    const reply = await agentClients[agent](current.messages);
+    await appendMessage(threadId, { role: 'assistant', content: reply });
     setInput('');
   };
 
   return (
     <View style={{ flex: 1, padding: 16 }}>
       <FlatList
-        data={threads[threadId]?.messages ?? []}
+        data={thread?.messages ?? []}
         keyExtractor={(_, idx) => idx.toString()}
         renderItem={({ item }) => (
           <Text>
