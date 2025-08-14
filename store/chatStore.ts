@@ -2,19 +2,21 @@ import { create } from 'zustand';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AgentType } from '../scripts/api/types';
 
+
 export type ChatMessage = {
   role: 'user' | 'assistant';
   content: string;
 };
 
 export interface ChatThread {
-  threadId: string;
+  id: string;
   agentType?: AgentType;
   messages: ChatMessage[];
 }
 
 interface ChatState {
   threads: Record<string, ChatThread>;
+
   createThread: (threadId: string) => void;
   addMessage: (threadId: string, message: ChatMessage) => Promise<void>;
   loadThread: (threadId: string) => Promise<void>;
@@ -24,6 +26,7 @@ interface ChatState {
 
 export const useChatStore = create<ChatState>((set, get) => ({
   threads: {},
+
   loadThread: async (threadId) => {
     const existing = get().threads[threadId];
     if (existing) return;
@@ -77,11 +80,17 @@ export const useChatStore = create<ChatState>((set, get) => ({
       const thread = state.threads[threadId];
       if (!thread) return state;
       return {
+
         threads: {
           ...state.threads,
-          [threadId]: { ...thread, agentType: agent },
+          [id]: {
+            ...state.threads[id],
+            agentType,
+          },
         },
-      };
-    }),
-  getThread: (threadId) => get().threads[threadId],
+      }));
+    }
+  },
+  getThreadById: (id) => get().threads[id],
 }));
+
