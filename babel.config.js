@@ -8,12 +8,14 @@ module.exports = function (api) {
     ],
     plugins: [
       
-      ['module-resolver',
-        {alias: {
-            '@': './src',
-            '@components': './src/components',
-            '@screens': './src/screens',
-            '@assets': './src/assets',
+      [
+        'module-resolver',
+        {
+          alias: {
+            '@': './',
+            '@components': './components',
+            '@screens': './app',
+            '@assets': './assets',
           },
         },
       ],
