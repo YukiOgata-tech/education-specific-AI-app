@@ -1,7 +1,7 @@
 import { create } from 'zustand';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AgentType } from '../scripts/api/types';
 
-import { classifyTopic } from '../scripts/api/commander';
-import type { AgentType } from '../scripts/api/types';
 
 export type ChatMessage = {
   role: 'user' | 'assistant';
@@ -16,31 +16,71 @@ export interface ChatThread {
 
 interface ChatState {
   threads: Record<string, ChatThread>;
-  appendMessage: (id: string, message: ChatMessage) => Promise<void>;
-  getThreadById: (id: string) => ChatThread | undefined;
+
+  createThread: (threadId: string) => void;
+  addMessage: (threadId: string, message: ChatMessage) => Promise<void>;
+  loadThread: (threadId: string) => Promise<void>;
+  setAgentType: (threadId: string, agent: AgentType) => void;
+  getThread: (threadId: string) => ChatThread | undefined;
 }
 
 export const useChatStore = create<ChatState>((set, get) => ({
   threads: {},
-  appendMessage: async (id, message) => {
-    const existing = get().threads[id] ?? { id, messages: [] };
-    const isFirst = existing.messages.length === 0 && message.role === 'user';
 
-    // add the message immediately
+  loadThread: async (threadId) => {
+    const existing = get().threads[threadId];
+    if (existing) return;
+    const stored = await AsyncStorage.getItem(`thread-${threadId}`);
+    if (stored) {
+      const messages: ChatMessage[] = JSON.parse(stored);
+      set((state) => ({
+        threads: {
+          ...state.threads,
+          [threadId]: { threadId, messages },
+        },
+      }));
+    } else {
+      set((state) => ({
+        threads: {
+          ...state.threads,
+          [threadId]: { threadId, messages: [] },
+        },
+      }));
+    }
+  },
+  createThread: (threadId) => {
+    const existing = get().threads[threadId];
+    if (existing) return;
     set((state) => ({
       threads: {
         ...state.threads,
-        [id]: {
-          ...existing,
-          id,
-          messages: [...existing.messages, message],
-        },
+        [threadId]: { threadId, messages: [] },
       },
     }));
+  },
+  addMessage: async (threadId, message) => {
+    const current = get().threads[threadId] ?? { threadId, messages: [] };
+    const updated: ChatThread = {
+      ...current,
+      messages: [...current.messages, message],
+    };
+    set((state) => ({
+      threads: {
+        ...state.threads,
+        [threadId]: updated,
+      },
+    }));
+    await AsyncStorage.setItem(
+      `thread-${threadId}`,
+      JSON.stringify(updated.messages)
+    );
+  },
+  setAgentType: (threadId, agent) =>
+    set((state) => {
+      const thread = state.threads[threadId];
+      if (!thread) return state;
+      return {
 
-    if (isFirst) {
-      const agentType = await classifyTopic(message.content);
-      set((state) => ({
         threads: {
           ...state.threads,
           [id]: {
