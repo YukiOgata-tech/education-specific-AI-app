@@ -5,11 +5,11 @@ import { signOut } from 'firebase/auth';
 
 import { auth } from '../../scripts/firebase';
 
-import { HapticTab } from '@/components/HapticTab';
+import { HapticTab } from '../../components/HapticTab';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { useColorScheme } from '../../hooks/useColorScheme.web';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();

@@ -3,20 +3,31 @@
   "compilerOptions": {
     "strict": true,
     "baseUrl": ".",
-    "types": ["nativewind/types"],
+    "types": [
+      "nativewind/types"
+    ],
     "paths": {
-      "@/*": ["./*"],
-      "@components/*": ["components/*"],
-      "@screens/*": ["app/*"],
-      "@assets/*": ["assets/*"],
+      "@/*": [
+        "./*"
+      ],
+      "@components/*": [
+        "components/*"
+      ],
+      "@screens/*": [
+        "app/*"
+      ],
+      "@assets/*": [
+        "assets/*"
+      ]
     },
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
+    "allowSyntheticDefaultImports": true
   },
   "include": [
     "**/*.ts",
     "**/*.tsx",
     ".expo/types/**/*.ts",
-    "expo-env.d.ts"
-  ],
+    "expo-env.d.ts",
+    "nativewind-env.d.ts"
+  ]
 }
