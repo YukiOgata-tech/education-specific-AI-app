@@ -5,6 +5,9 @@ import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { ChatSendButton } from '../../components/ChatSendButton';
+import { TaggingButton } from '../../components/TaggingButton';
+import { ReportButton } from '../../components/ReportButton';
 
 export default function HomeScreen() {
   return (
@@ -50,6 +53,12 @@ export default function HomeScreen() {
           <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
           <ThemedText type="defaultSemiBold">app-example</ThemedText>.
         </ThemedText>
+      </ThemedView>
+      <ThemedView style={styles.stepContainer}>
+        <ThemedText type="subtitle">Event Logging Demo</ThemedText>
+        <ChatSendButton />
+        <TaggingButton />
+        <ReportButton />
       </ThemedView>
     </ParallaxScrollView>
   );

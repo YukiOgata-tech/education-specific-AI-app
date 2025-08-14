@@ -23,3 +23,19 @@ AIモデル
 その他
 •	Google Vision API または Microsoft提供のOCR (検討中) 
 
+### Supabase 環境変数
+開発と本番でテーブル名やキーが切り替えられるよう、以下の環境変数を設定してください。
+
+```
+EXPO_PUBLIC_ENV=development # または production
+
+EXPO_PUBLIC_SUPABASE_URL_DEV=...
+EXPO_PUBLIC_SUPABASE_ANON_KEY_DEV=...
+EXPO_PUBLIC_SUPABASE_EVENT_TABLE_DEV=...
+
+EXPO_PUBLIC_SUPABASE_URL_PROD=...
+EXPO_PUBLIC_SUPABASE_ANON_KEY_PROD=...
+EXPO_PUBLIC_SUPABASE_EVENT_TABLE_PROD=...
+```
+
+`.env` を作成し、上記の値を設定してからアプリを実行してください。
