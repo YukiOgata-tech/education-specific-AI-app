@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Alert } from 'react-native';
-import { logEvent } from '../scripts/supabase';
+import { logEvent } from '@/scripts/supabase';
 
 export function ChatSendButton() {
   const handlePress = async () => {

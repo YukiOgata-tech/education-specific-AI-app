@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { View, TextInput, Button, FlatList, Text } from 'react-native';
 
-import { TaggingButton } from '../../../components/TaggingButton';
-import { planner } from '../../../scripts/api/planner';
-import { useChatStore } from '../../../store/chatStore';
+import { TaggingButton } from '@/components/TaggingButton';
+import { planner } from '@/scripts/api/planner';
+import { useChatStore } from '@/store/chatStore';
 
 export default function PlannerChatScreen() {
   const threadId = 'planner';

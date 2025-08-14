@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { View, TextInput, Button, FlatList, Text } from 'react-native';
 
-import { TaggingButton } from '../../../components/TaggingButton';
-import { counselor } from '../../../scripts/api/counselor';
-import { useChatStore } from '../../../store/chatStore';
+import { TaggingButton } from '@/components/TaggingButton';
+import { counselor } from '@/scripts/api/counselor';
+import { useChatStore } from '@/store/chatStore';
 
 export default function CounselorChatScreen() {
   const threadId = 'counselor';
