@@ -43,4 +43,4 @@ yarn-error.*
 
 app-example
 
-firebase.ts
+/firebase.ts
