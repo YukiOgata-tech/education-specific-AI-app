@@ -2,11 +2,11 @@ import React, { useRef, useState } from 'react';
 import { View, TextInput, Button, FlatList, Text } from 'react-native';
 import { nanoid } from 'nanoid';
 
-import { tutor } from '../../../scripts/api/tutor';
-import { counselor } from '../../../scripts/api/counselor';
-import { planner } from '../../../scripts/api/planner';
-import { AgentType } from '../../../scripts/api/types';
-import { useChatStore, ChatMessage } from '../../../store/chatStore';
+import { tutor } from '@/scripts/api/tutor';
+import { counselor } from '@/scripts/api/counselor';
+import { planner } from '@/scripts/api/planner';
+import { AgentType } from '@/scripts/api/types';
+import { useChatStore, ChatMessage } from '@/store/chatStore';
 
 const agentClients: Record<AgentType, (msgs: ChatMessage[]) => Promise<string>> = {
   tutor,

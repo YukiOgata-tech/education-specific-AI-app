@@ -5,9 +5,9 @@ import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { ChatSendButton } from '../../components/ChatSendButton';
-import { TaggingButton } from '../../components/TaggingButton';
-import { ReportButton } from '../../components/ReportButton';
+import { ChatSendButton } from '@/components/ChatSendButton';
+import { TaggingButton } from '@/components/TaggingButton';
+import { ReportButton } from '@/components/ReportButton';
 
 export default function HomeScreen() {
   return (
